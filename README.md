@@ -1,11 +1,8 @@
-# fresh project
+# TRON BATTLE
 
-### Usage
-
-Start the project:
+## quick start
 
 ```
-deno task start
+git clone https://github.com/cp-20/tron-battle
+deno task start 
 ```
-
-This will watch the project directory and restart as necessary.
