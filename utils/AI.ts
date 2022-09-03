@@ -12,8 +12,6 @@ type input = {
 type output = 'up' | 'right' | 'down' | 'left';
 
 const AI = (input: input): output => {
-  console.log('AI start');
-
   const evalation: [output, number][] = Object.keys(deltaPosition).map(
     (direction) => {
       for (let i = 1; ; i++) {
@@ -34,8 +32,6 @@ const AI = (input: input): output => {
   const maxEval = evalation.reduce((acc, cur) => Math.max(acc, cur[1]), 0);
   const nextDir: output =
     evalation.find((dir) => dir[1] === maxEval)?.[0] ?? 'up';
-
-  console.log('AI end');
 
   return nextDir;
 };
