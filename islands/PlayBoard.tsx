@@ -228,6 +228,7 @@ const PlayBoard = () => {
 
   const onKeydown = useCallback((e: KeyboardEvent) => {
     if (e.key === " " && ["win", "lose", "draw"].includes(screenState)) {
+      e.stopPropagation();
       const initialPlayerPosition = getRandomPos();
       const initialAIPosition = getRandomPos();
 
