@@ -1,0 +1,87 @@
+import { useCallback, useEffect, useRef } from "preact/hooks";
+import { cellPos } from "../components/Board.tsx";
+import { position } from "./useAI.tsx";
+
+export const deltaPosition: Record<
+  Exclude<cellPos, null>,
+  { x: number; y: number }
+> = {
+  up: {
+    x: 0,
+    y: -1,
+  },
+  right: {
+    x: 1,
+    y: 0,
+  },
+  down: {
+    x: 0,
+    y: 1,
+  },
+  left: {
+    x: -1,
+    y: 0,
+  },
+};
+
+const usePlayer = (initialPosition: position) => {
+  const position = useRef(initialPosition);
+  const direction = useRef<cellPos>(null);
+  const nextDirection = useRef<cellPos>(null);
+
+  const getNextPlayerPosition = () => {
+    direction.current = nextDirection.current;
+
+    if (direction.current !== null) {
+      position.current = {
+        x: position.current.x + deltaPosition[direction.current].x,
+        y: position.current.y + deltaPosition[direction.current].y,
+      };
+    }
+
+    return {
+      position: position.current,
+      direction: direction.current,
+    };
+  };
+
+  const setPosition = (pos: position) => {
+    position.current = pos;
+  };
+
+  const setDirection = (dir: cellPos) => {
+    direction.current = dir;
+    nextDirection.current = dir;
+  };
+
+  const onKeydown = (e: KeyboardEvent) => {
+    if (["ArrowUp", "w"].includes(e.key) && direction.current !== "down") {
+      nextDirection.current = "up";
+    }
+    if (["ArrowRight", "d"].includes(e.key) && direction.current !== "left") {
+      nextDirection.current = "right";
+    }
+    if (["ArrowDown", "s"].includes(e.key) && direction.current !== "up") {
+      nextDirection.current = "down";
+    }
+    if (["ArrowLeft", "a"].includes(e.key) && direction.current !== "right") {
+      nextDirection.current = "left";
+    }
+  };
+
+  useEffect(() => {
+    addEventListener("keydown", onKeydown);
+
+    return () => {
+      removeEventListener("keydown", onKeydown);
+    };
+  }, []);
+
+  return {
+    getNextPlayerPosition,
+    setPosition,
+    setDirection,
+  };
+};
+
+export default usePlayer;

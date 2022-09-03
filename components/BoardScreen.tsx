@@ -1,0 +1,69 @@
+/** @jsx h */
+/** @jsxFrag Fragment */
+import { Fragment, h } from "preact";
+import { tw } from "@twind";
+
+export type state = "title" | "playing" | "win" | "lose" | "draw";
+
+export type screenProps = {
+  state: state;
+};
+
+const BoardScreen = ({ state }: screenProps) => {
+  if (state === "title") {
+    return (
+      <div
+        class={tw`w-full h-full flex flex-col items-center`}
+        style={{ backgroundColor: "rgb(0 0 0 / 50%)" }}
+      >
+        <img src="/logo.png" alt="TRON" width="300" class={tw`mt-32`} />
+        <p class={tw`mb-32 mt-auto text-[#eee]`}>WASDまたは矢印キーを押してスタート</p>
+      </div>
+    );
+  }
+
+  if (state === "playing") {
+    return <></>;
+  }
+
+  if (["win", "lose", "draw"].includes(state)) {
+    return (
+      <div
+        class={tw`w-full h-full flex flex-col items-center animate-fadein`}
+        style={{ backgroundColor: "rgb(0 0 0 / 50%)" }}
+      >
+        <p class={tw`mt-32`}>
+          {state === "win" && (
+            <span
+              class={tw`text-8xl text-yellow-400`}
+              style={{ textShadow: "0 0 1rem rgba(250 204 21 / 50%)" }}
+            >
+              YOU WIN
+            </span>
+          )}
+          {state === "lose" && (
+            <span
+              class={tw`text-8xl text-red-600`}
+              style={{ textShadow: "0 0 1rem rgba(220 38 38 / 50%)" }}
+            >
+              YOU LOSE
+            </span>
+          )}
+          {state === "draw" && (
+            <span
+              class={tw`text-8xl text-gray-200`}
+              style={{ textShadow: "0 0 1rem rgba(229 231 235 / 50%)" }}
+            >
+              DRAW
+            </span>
+          )}
+        </p>
+        <p class={tw`mb-32 mt-auto text-[#eee]`}>スペースキーを押してリトライ</p>
+      </div>
+    );
+  }
+
+  return <></>;
+};
+
+export default BoardScreen;
