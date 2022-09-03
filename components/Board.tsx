@@ -251,6 +251,7 @@ const Board = ({ size, board, diff }: boardProps) => {
       ref={canvasRef}
       width={width}
       height={height}
+      style={{ width: "40rem" }}
     >
     </canvas>
   );
