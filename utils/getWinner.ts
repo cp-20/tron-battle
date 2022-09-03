@@ -2,13 +2,13 @@ import { cell } from '../components/Board.tsx';
 import { position } from '../hooks/useAI.tsx';
 import { boardSize, deathDiff, posToIndex } from '../islands/PlayBoard.tsx';
 
-const isOutOfBoard = (pos: position) =>
+export const isOutOfBoard = (pos: position) =>
   pos.x < 0 || boardSize.x <= pos.x || pos.y < 0 || boardSize.y <= pos.y;
 
-const isStacking = (board: cell[], pos: position) =>
+export const isStacking = (board: cell[], pos: position) =>
   board[posToIndex(pos)].owner !== null;
 
-const isSamePos = (pos1: position, pos2: position) =>
+export const isSamePos = (pos1: position, pos2: position) =>
   pos1.x === pos2.x && pos1.y === pos2.y;
 
 const getPreviousPos = (pos: position): position => ({
