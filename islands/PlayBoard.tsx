@@ -118,11 +118,7 @@ const PlayBoard = () => {
   }, [screenState]);
 
   const processing = useRef(false);
-  console.time("loop");
   const gameLoop = async () => {
-    console.timeEnd("loop");
-    console.time("loop");
-
     if (processing.current) return;
     processing.current = true;
 
