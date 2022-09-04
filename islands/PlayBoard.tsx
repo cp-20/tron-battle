@@ -100,9 +100,10 @@ const PlayBoard = () => {
   });
   const AIPos = useRef<position>(initialAIPosition);
 
-  const { getNextPlayerPosition, setPosition, setDirection } = usePlayer(
-    initialPlayerPosition,
-  );
+  const { getNextPlayerPosition, setPosition, setDirection, getDirection } =
+    usePlayer(
+      initialPlayerPosition,
+    );
   const { getNextAIPosition } = useAI();
 
   const [screenState, setScreenState] = useState<state>("title");
@@ -285,9 +286,17 @@ const PlayBoard = () => {
       setScreenState("title");
     }
 
+    const direction = getDirection();
+    console.log(direction);
+
+    const allowedInputs = [
+      direction !== "down" && ["w", "ArrowUp"],
+      direction !== "left" && ["d", "ArrowRight"],
+      direction !== "up" && ["s", "ArrowDown"],
+      direction !== "right" && ["a", "ArrowLeft"],
+    ].filter(Boolean).flat();
     if (
-      ["w", "a", "s", "d", "ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"]
-        .includes(e.key)
+      allowedInputs.includes(e.key)
     ) {
       gameLoop();
     }

@@ -54,6 +54,10 @@ const usePlayer = (initialPosition: position) => {
     nextDirection.current = dir;
   };
 
+  const getDirection = () => {
+    return direction.current;
+  };
+
   const onKeydown = (e: KeyboardEvent) => {
     if (["ArrowUp", "w"].includes(e.key) && direction.current !== "down") {
       nextDirection.current = "up";
@@ -81,6 +85,7 @@ const usePlayer = (initialPosition: position) => {
     getNextPlayerPosition,
     setPosition,
     setDirection,
+    getDirection,
   };
 };
 
