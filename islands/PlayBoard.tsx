@@ -225,14 +225,6 @@ const PlayBoard = () => {
     });
   };
 
-  useEffect(() => {
-    const interval = setInterval(gameLoop, updateInterval * 1000);
-
-    return () => {
-      clearInterval(interval);
-    };
-  }, [setBoard, setDiff]);
-
   const onKeydown = useCallback((e: KeyboardEvent) => {
     if (e.key === " " && ["win", "lose", "draw"].includes(screenState)) {
       e.stopPropagation();
@@ -283,6 +275,13 @@ const PlayBoard = () => {
       AIPos.current = initialAIPosition;
       setDirection(null);
       setScreenState("title");
+    }
+
+    if (
+      ["w", "a", "s", "d", "ArrowUp", "ArrowRight", "ArrowDown", "ArrowLeft"]
+        .includes(e.key)
+    ) {
+      gameLoop();
     }
   }, [screenState]);
 
