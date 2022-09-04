@@ -24,11 +24,19 @@ const useAI = () => {
       ai_pos: AIPos,
       board: board.map((cell) => cell.owner !== null ? cellId[cell.owner] : -1),
     };
+
+    const start = performance.now();
+
     const res = await fetch("/api/ai", {
       method: "POST",
       body: JSON.stringify(body),
     });
-    const direction = (await res.text()).toLowerCase() as Exclude<
+
+    console.log(performance.now() - start);
+
+    const text = await res.text();
+
+    const direction = text as Exclude<
       cellPos,
       null
     >;

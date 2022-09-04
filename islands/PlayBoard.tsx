@@ -141,7 +141,9 @@ const PlayBoard = () => {
         return cell;
       });
       const { direction: AIdirection, nextPos: AINextPos } =
-        await getNextAIPosition(AIPos.current, playerPos, board);
+        playerDirection !== null
+          ? await getNextAIPosition(AIPos.current, playerPos, board)
+          : { direction: null, nextPos: AIPos.current };
 
       setBoard((board) => {
         return board.map((cell, i) => {
@@ -173,7 +175,10 @@ const PlayBoard = () => {
             };
           }
 
-          if (i === posToIndex(AINextPos) && cell.owner === null) {
+          if (
+            i === posToIndex(AINextPos) && AIdirection !== null &&
+            cell.owner === null
+          ) {
             return {
               ...cell,
               owner: "AI",
