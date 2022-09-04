@@ -1,6 +1,8 @@
 import { cell, cellPos } from "../components/Board.tsx";
 import { boardSize } from "../islands/PlayBoard.tsx";
 import { deltaPosition } from "./usePlayer.tsx";
+import initAI, { ai_response } from "../utils/ai/wasm.js";
+import { useEffect, useRef } from "preact/hooks";
 
 export type position = {
   x: number;
@@ -12,8 +14,16 @@ const cellId = {
   AI: 1,
 };
 
+type api = (body: string) => Exclude<cellPos, null>;
+
 const useAI = () => {
-  const getNextAIPosition = async (
+  useEffect(() => {
+    initAI(new URL("wasm_bg.wasm", location.origin)).then(() => {
+      console.log("initialized");
+    });
+  }, []);
+
+  const getNextAIPosition = (
     AIPos: position,
     playerPos: position,
     board: cell[],
@@ -27,14 +37,13 @@ const useAI = () => {
 
     const start = performance.now();
 
-    const res = await fetch("/api/ai", {
-      method: "POST",
-      body: JSON.stringify(body),
-    });
+    const bodyString = JSON.stringify(body);
+
+    const res = ai_response(bodyString);
+
+    const text = res.toLowerCase().slice(1, -1);
 
     console.log(performance.now() - start);
-
-    const text = await res.text();
 
     const direction = text as Exclude<
       cellPos,
