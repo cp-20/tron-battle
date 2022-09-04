@@ -287,7 +287,6 @@ const PlayBoard = () => {
     }
 
     const direction = getDirection();
-    console.log(direction);
 
     const allowedInputs = [
       direction !== "down" && ["w", "ArrowUp"],
