@@ -116,15 +116,21 @@ const PlayBoard = () => {
     screenStateRef.current = screenState;
   }, [screenState]);
 
+  const processing = useRef(false);
   const gameLoop = async () => {
-    if (["win", "lose", "draw"].includes(screenStateRef.current)) return;
+    if (processing.current) return;
+    processing.current = true;
+
+    if (["win", "lose", "draw"].includes(screenStateRef.current)) {
+      return processing.current = false;
+    }
 
     // プレイヤーの情報
     const { position: playerPos, direction: playerDirection } =
       getNextPlayerPosition();
 
     // プレイヤーが止まってたら処理をしない
-    if (playerDirection === null) return;
+    if (playerDirection === null) return processing.current = false;
 
     setScreenState("playing");
 
@@ -210,7 +216,7 @@ const PlayBoard = () => {
         setScreenState("draw");
       }
       setDiff(deathPos);
-      return;
+      return processing.current = false;
     }
 
     setDiff({
@@ -223,6 +229,8 @@ const PlayBoard = () => {
         direction: playerDirection,
       },
     });
+
+    processing.current = false;
   };
 
   const onKeydown = useCallback((e: KeyboardEvent) => {

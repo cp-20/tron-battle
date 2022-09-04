@@ -12,10 +12,14 @@ export const handler: Handlers = {
           'Content-Type': 'application/json',
         },
       });
-      const rawDirection = await res.text();
-      const direction = rawDirection.toLowerCase().slice(1, -1);
+      if (res.ok) {
+        const rawDirection = await res.text();
+        const direction = rawDirection.toLowerCase().slice(1, -1);
 
-      return new Response(direction);
+        return new Response(direction);
+      } else {
+        return new Response('up');
+      }
     } catch (err) {
       console.error(err);
 
