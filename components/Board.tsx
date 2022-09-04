@@ -221,7 +221,7 @@ const Board = ({ size, board, diff }: boardProps) => {
     const diff = diffRef.current;
     if (Array.isArray(diff)) return;
 
-    if (context.current !== null) {
+    if (context.current !== null && tick.current < 60 * updateInterval) {
       if (diff.AI.direction !== null) {
         context.current.fillStyle = colors.AI;
         drawAnimation(
