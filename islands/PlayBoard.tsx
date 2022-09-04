@@ -116,115 +116,117 @@ const PlayBoard = () => {
     screenStateRef.current = screenState;
   }, [screenState]);
 
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      if (["win", "lose", "draw"].includes(screenStateRef.current)) return;
+  const gameLoop = async () => {
+    if (["win", "lose", "draw"].includes(screenStateRef.current)) return;
 
-      // プレイヤーの情報
-      const { position: playerPos, direction: playerDirection } =
-        getNextPlayerPosition();
+    // プレイヤーの情報
+    const { position: playerPos, direction: playerDirection } =
+      getNextPlayerPosition();
 
-      // プレイヤーが止まってたら処理をしない
-      if (playerDirection === null) return;
+    // プレイヤーが止まってたら処理をしない
+    if (playerDirection === null) return;
 
-      setScreenState("playing");
+    setScreenState("playing");
 
-      // AIの情報
-      const board: cell[] = boardRef.current.map((cell, i) => {
-        if (i === posToIndex(playerPos)) {
+    // AIの情報
+    const board: cell[] = boardRef.current.map((cell, i) => {
+      if (i === posToIndex(playerPos)) {
+        return {
+          ...cell,
+          owner: "player",
+        };
+      }
+
+      return cell;
+    });
+    const { direction: AIdirection, nextPos: AINextPos } =
+      playerDirection !== null
+        ? await getNextAIPosition(AIPos.current, playerPos, board)
+        : { direction: null, nextPos: AIPos.current };
+
+    setBoard((board) => {
+      return board.map((cell, i) => {
+        if (cell.isTop && cell.owner === "player") {
           return {
             ...cell,
+            isTop: false,
+            nextCell: playerDirection,
+          };
+        }
+
+        if (
+          i === posToIndex(playerPos) && playerDirection !== null &&
+          cell.owner === null
+        ) {
+          return {
+            ...cell,
+            isTop: true,
+            previousCell: reverseDirection[playerDirection],
             owner: "player",
+          };
+        }
+
+        if (i === posToIndex(AIPos.current)) {
+          return {
+            ...cell,
+            isTop: false,
+            nextCell: AIdirection,
+          };
+        }
+
+        if (
+          i === posToIndex(AINextPos) && AIdirection !== null &&
+          cell.owner === null
+        ) {
+          return {
+            ...cell,
+            owner: "AI",
+            isTop: true,
+            previousCell: reverseDirection[AIdirection],
           };
         }
 
         return cell;
       });
-      const { direction: AIdirection, nextPos: AINextPos } =
-        playerDirection !== null
-          ? await getNextAIPosition(AIPos.current, playerPos, board)
-          : { direction: null, nextPos: AIPos.current };
+    });
 
-      setBoard((board) => {
-        return board.map((cell, i) => {
-          if (cell.isTop && cell.owner === "player") {
-            return {
-              ...cell,
-              isTop: false,
-              nextCell: playerDirection,
-            };
-          }
+    AIPos.current = AINextPos;
 
-          if (
-            i === posToIndex(playerPos) && playerDirection !== null &&
-            cell.owner === null
-          ) {
-            return {
-              ...cell,
-              isTop: true,
-              previousCell: reverseDirection[playerDirection],
-              owner: "player",
-            };
-          }
+    // 勝敗が決まっているか
+    const { winner, deathPos } = getWinner(
+      boardRef.current,
+      playerPos,
+      AINextPos,
+    );
 
-          if (i === posToIndex(AIPos.current)) {
-            return {
-              ...cell,
-              isTop: false,
-              nextCell: AIdirection,
-            };
-          }
-
-          if (
-            i === posToIndex(AINextPos) && AIdirection !== null &&
-            cell.owner === null
-          ) {
-            return {
-              ...cell,
-              owner: "AI",
-              isTop: true,
-              previousCell: reverseDirection[AIdirection],
-            };
-          }
-
-          return cell;
-        });
-      });
-
-      AIPos.current = AINextPos;
-
-      // 勝敗が決まっているか
-      const { winner, deathPos } = getWinner(
-        boardRef.current,
-        playerPos,
-        AINextPos,
-      );
-
-      if (winner !== null) {
-        if (winner === "player") {
-          setScreenState("win");
-        }
-        if (winner === "AI") {
-          setScreenState("lose");
-        }
-        if (winner === "draw") {
-          setScreenState("draw");
-        }
-        setDiff(deathPos);
-        return;
+    if (winner !== null) {
+      if (winner === "player") {
+        setScreenState("win");
       }
+      if (winner === "AI") {
+        setScreenState("lose");
+      }
+      if (winner === "draw") {
+        setScreenState("draw");
+      }
+      setDiff(deathPos);
+      return;
+    }
 
-      setDiff({
-        AI: {
-          ...AINextPos,
-          direction: AIdirection,
-        },
-        player: {
-          ...playerPos,
-          direction: playerDirection,
-        },
-      });
-    }, updateInterval * 1000);
+    setDiff({
+      AI: {
+        ...AINextPos,
+        direction: AIdirection,
+      },
+      player: {
+        ...playerPos,
+        direction: playerDirection,
+      },
+    });
+  };
+
+  useEffect(() => {
+    const interval = setInterval(gameLoop, updateInterval * 1000);
 
     return () => {
       clearInterval(interval);
