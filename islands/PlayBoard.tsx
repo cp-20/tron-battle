@@ -118,7 +118,11 @@ const PlayBoard = () => {
   }, [screenState]);
 
   const processing = useRef(false);
-  const gameLoop = () => {
+  console.time("loop");
+  const gameLoop = async () => {
+    console.timeEnd("loop");
+    console.time("loop");
+
     if (processing.current) return;
     processing.current = true;
 
@@ -151,7 +155,7 @@ const PlayBoard = () => {
     const { direction: AIdirection, nextPos: AINextPos }: {
       direction: cellPos;
       nextPos: position;
-    } = (() => {
+    } = await (() => {
       if (playerDirection === null) {
         return { direction: null, nextPos: AIPos.current };
       }
@@ -272,6 +276,14 @@ const PlayBoard = () => {
     processing.current = false;
   };
 
+  useEffect(() => {
+    const interval = setInterval(gameLoop, 1000 * updateInterval);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
   const onKeydown = useCallback((e: KeyboardEvent) => {
     if (e.key === " " && ["win", "lose", "draw"].includes(screenState)) {
       e.stopPropagation();
@@ -322,18 +334,6 @@ const PlayBoard = () => {
       AIPos.current = initialAIPosition;
       setDirection(null);
       setScreenState("title");
-    }
-
-    const direction = getDirection();
-
-    const allowedInputs = [
-      direction !== "down" && ["w", "ArrowUp"],
-      direction !== "left" && ["d", "ArrowRight"],
-      direction !== "up" && ["s", "ArrowDown"],
-      direction !== "right" && ["a", "ArrowLeft"],
-    ].filter(Boolean).flat();
-    if (allowedInputs.includes(e.key) && !e.repeat) {
-      gameLoop();
     }
   }, [screenState]);
 

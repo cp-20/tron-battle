@@ -1,25 +1,22 @@
 import { Handlers } from '$fresh/server.ts';
+import init, { ai_response } from '../../utils/ai/wasm.js';
 
-const API_URL = `http://localhost:6583`;
+if (Deno.env.get('ENVIRONMENT') === 'production') {
+  const res = await fetch(
+    'https://github.com/cp-20/tron-battle/blob/feature/turn/static/wasm_bg.wasm?raw=true'
+  );
+  await init(await res.arrayBuffer());
+} else {
+  await init(Deno.readFile('./static/wasm_bg.wasm'));
+}
 
 export const handler: Handlers = {
   POST: async (req) => {
     try {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        body: await req.text(),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      if (res.ok) {
-        const rawDirection = await res.text();
-        const direction = rawDirection.toLowerCase().slice(1, -1);
+      const res = ai_response(await req.text());
+      const direction = res.toLowerCase().slice(1, -1);
 
-        return new Response(direction);
-      } else {
-        return new Response('up');
-      }
+      return new Response(direction);
     } catch (err) {
       console.error(err);
 

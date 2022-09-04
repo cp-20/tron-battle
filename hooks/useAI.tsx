@@ -23,7 +23,7 @@ const useAI = () => {
     });
   }, []);
 
-  const getNextAIPosition = (
+  const getNextAIPosition = async (
     AIPos: position,
     playerPos: position,
     board: cell[],
@@ -37,11 +37,13 @@ const useAI = () => {
 
     const start = performance.now();
 
-    const bodyString = JSON.stringify(body);
+    const res = await fetch("/api/ai", {
+      method: "POST",
+      body: JSON.stringify(body),
+      headers: { "Content-Type": "application/json" },
+    });
 
-    const res = ai_response(bodyString);
-
-    const text = res.toLowerCase().slice(1, -1);
+    const text = await res.text();
 
     console.log(performance.now() - start);
 
