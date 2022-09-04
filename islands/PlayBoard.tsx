@@ -294,9 +294,7 @@ const PlayBoard = () => {
       direction !== "up" && ["s", "ArrowDown"],
       direction !== "right" && ["a", "ArrowLeft"],
     ].filter(Boolean).flat();
-    if (
-      allowedInputs.includes(e.key)
-    ) {
+    if (allowedInputs.includes(e.key) && !e.repeat) {
       gameLoop();
     }
   }, [screenState]);
