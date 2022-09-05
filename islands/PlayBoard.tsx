@@ -49,8 +49,13 @@ const getRandomPos = () => ({
   y: Math.floor(Math.random() * boardSize.y),
 });
 
+const getAgainstPos = (pos: position) => ({
+  x: boardSize.x - pos.x - 1,
+  y: boardSize.y - pos.y - 1,
+});
+
 const initialPlayerPosition = getRandomPos();
-const initialAIPosition = getRandomPos();
+const initialAIPosition = getAgainstPos(initialPlayerPosition);
 
 // アップデート間隔[s]
 export const updateInterval = 0.3;
@@ -250,7 +255,7 @@ const PlayBoard = () => {
     if (e.key === " " && ["win", "lose"].includes(screenState)) {
       e.stopPropagation();
       const initialPlayerPosition = getRandomPos();
-      const initialAIPosition = getRandomPos();
+      const initialAIPosition = getAgainstPos(initialPlayerPosition);
 
       const initialBoard: cell[] = new Array(boardSize.x * boardSize.y).fill(0)
         .map(
