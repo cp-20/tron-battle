@@ -142,8 +142,6 @@ const useAI = () => {
     playerDirection: cellPos,
     board: cell[],
   ) => {
-    console.log(AIPos, playerPos, playerDirection, board);
-
     // 次のAIの情報を取得
     const next = await _getNextAIPosition(
       AIPos,
