@@ -128,6 +128,10 @@ const PlayBoard = () => {
     processing.current = true;
 
     if (["win", "lose"].includes(screenStateRef.current)) {
+      if (screenStateRef.current === "win") {
+        fetch("/api/winners", { method: "POST" });
+      }
+
       clearCache();
       return processing.current = false;
     }
