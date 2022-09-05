@@ -11,7 +11,7 @@ import {
   updateInterval,
 } from "../islands/PlayBoard.tsx";
 import { useEffect, useRef } from "preact/hooks";
-import { position } from "../hooks/useAI.tsx";
+import { direction, position } from "../hooks/useAI.tsx";
 import { deltaPosition } from "../hooks/usePlayer.tsx";
 
 export type boardSize = {
@@ -82,7 +82,7 @@ type square = {
   height: number;
 };
 
-const cellSquare: Record<Exclude<cellPos, null>, square> = {
+const cellSquare: Record<direction, square> = {
   up: {
     x: cellSize / 6,
     y: -1,

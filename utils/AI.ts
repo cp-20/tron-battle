@@ -1,4 +1,4 @@
-import { position } from '../hooks/useAI.tsx';
+import { calcNextPos, direction, position } from '../hooks/useAI.tsx';
 import { deltaPosition } from '../hooks/usePlayer.tsx';
 import { posToIndex } from '../islands/PlayBoard.tsx';
 import { isOutOfBoard } from './getWinner.ts';
@@ -94,11 +94,7 @@ type evals = { direction: output; evalation: number }[];
 const AI = (input: input): output => {
   const evals = Object.keys(deltaPosition)
     .map((direction) => {
-      const delta = deltaPosition[direction as keyof typeof deltaPosition];
-      const nextPos = {
-        x: input.ai_pos.x + delta.x,
-        y: input.ai_pos.y + delta.y,
-      };
+      const nextPos = calcNextPos(input.ai_pos, direction as direction);
       const nextCell = input.board[posToIndex(nextPos)];
 
       if (isOutOfBoard(nextPos) || nextCell !== -1) return;

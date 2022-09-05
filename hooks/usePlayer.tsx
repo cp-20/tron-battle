@@ -1,11 +1,8 @@
 import { useCallback, useEffect, useRef } from "preact/hooks";
 import { cellPos } from "../components/Board.tsx";
-import { position } from "./useAI.tsx";
+import { calcNextPos, direction, position } from "./useAI.tsx";
 
-export const deltaPosition: Record<
-  Exclude<cellPos, null>,
-  { x: number; y: number }
-> = {
+export const deltaPosition: Record<direction, { x: number; y: number }> = {
   up: {
     x: 0,
     y: -1,
@@ -33,10 +30,7 @@ const usePlayer = (initialPosition: position) => {
     direction.current = nextDirection.current;
 
     if (direction.current !== null) {
-      position.current = {
-        x: position.current.x + deltaPosition[direction.current].x,
-        y: position.current.y + deltaPosition[direction.current].y,
-      };
+      position.current = calcNextPos(position.current, direction.current);
     }
 
     return {

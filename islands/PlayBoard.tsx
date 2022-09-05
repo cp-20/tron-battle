@@ -5,9 +5,9 @@ import { tw } from "@twind";
 
 import Board, { cell, cellPos, ownerType } from "../components/Board.tsx";
 import { useCallback, useEffect, useRef, useState } from "preact/hooks";
-import usePlayer, { deltaPosition } from "../hooks/usePlayer.tsx";
-import useAI, { position } from "../hooks/useAI.tsx";
-import getWinner, { isOutOfBoard } from "../utils/getWinner.ts";
+import usePlayer from "../hooks/usePlayer.tsx";
+import useAI, { direction, position } from "../hooks/useAI.tsx";
+import getWinner from "../utils/getWinner.ts";
 import BoardScreen, { state } from "../components/BoardScreen.tsx";
 
 export type diffType = {
@@ -19,7 +19,7 @@ export type diffType = {
 export type diffTypeExcluseNull = {
   x: number;
   y: number;
-  direction: Exclude<cellPos, null>;
+  direction: direction;
 };
 
 export type deathDiff = {
@@ -35,8 +35,8 @@ export const boardSize = {
 };
 
 export const reverseDirection: Record<
-  Exclude<cellPos, null>,
-  Exclude<cellPos, null>
+  direction,
+  direction
 > = {
   up: "down",
   right: "left",
@@ -151,43 +151,12 @@ const PlayBoard = () => {
     const { direction: AIdirection, nextPos: AINextPos }: {
       direction: cellPos;
       nextPos: position;
-    } = await (() => {
-      if (playerDirection === null) {
-        return { direction: null, nextPos: AIPos.current };
-      }
-
-      if (isOutOfBoard(playerPos)) {
-        const movableDirecition = Object.keys(deltaPosition).find(
-          (direction) => {
-            const delta =
-              deltaPosition[direction as keyof typeof deltaPosition];
-            const nextPos = {
-              x: AIPos.current.x + delta.x,
-              y: AIPos.current.y + delta.y,
-            };
-            if (boardRef.current[posToIndex(nextPos)].owner === null) {
-              return true;
-            }
-
-            return false;
-          },
-        ) as Exclude<cellPos, null>;
-
-        const delta =
-          deltaPosition[movableDirecition as keyof typeof deltaPosition];
-        const nextPos = {
-          x: AIPos.current.x + delta.x,
-          y: AIPos.current.y + delta.y,
-        };
-
-        return {
-          direction: movableDirecition ?? "up",
-          nextPos: nextPos,
-        };
-      }
-
-      return getNextAIPosition(AIPos.current, playerPos, board);
-    })();
+    } = await getNextAIPosition(
+      AIPos.current,
+      playerPos,
+      playerDirection,
+      board,
+    );
 
     setBoard((board) => {
       return board.map((cell, i) => {
