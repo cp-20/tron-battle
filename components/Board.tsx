@@ -35,7 +35,7 @@ export type boardProps = {
   diff: diff | deathDiff;
 };
 
-const cellSize = 16;
+const cellSize = 32;
 
 const drawPoint = (
   ctx: CanvasRenderingContext2D,
@@ -44,8 +44,8 @@ const drawPoint = (
 ) => {
   ctx.beginPath();
   ctx.arc(
-    pos.x * 17 + cellSize / 2 + (adjust?.x ?? 0),
-    pos.y * 17 + cellSize / 2 + (adjust?.y ?? 0),
+    pos.x * (cellSize + 1) + cellSize / 2 + (adjust?.x ?? 0),
+    pos.y * (cellSize + 1) + cellSize / 2 + (adjust?.y ?? 0),
     cellSize / 3 - 0.5,
     0,
     Math.PI * 2,

@@ -30,8 +30,8 @@ export type deathDiff = {
 export type diff = Record<Exclude<ownerType, null>, diffType>;
 
 export const boardSize = {
-  x: 20,
-  y: 15,
+  x: 15,
+  y: 12,
 };
 
 export const reverseDirection: Record<
