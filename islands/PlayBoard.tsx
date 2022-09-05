@@ -151,7 +151,6 @@ const PlayBoard = () => {
 
       return cell;
     });
-    console.log(playerPos);
 
     const { direction: AIdirection, nextPos: AINextPos }: {
       direction: cellPos;
