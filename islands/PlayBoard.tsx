@@ -109,7 +109,7 @@ const PlayBoard = () => {
     usePlayer(
       initialPlayerPosition,
     );
-  const { getNextAIPosition } = useAI();
+  const { getNextAIPosition, clearCache } = useAI();
 
   const [screenState, setScreenState] = useState<state>("title");
   const screenStateRef = useRef<state>(screenState);
@@ -123,11 +123,12 @@ const PlayBoard = () => {
   }, [screenState]);
 
   const processing = useRef(false);
-  const gameLoop = () => {
+  const gameLoop = async () => {
     if (processing.current) return;
     processing.current = true;
 
     if (["win", "lose"].includes(screenStateRef.current)) {
+      clearCache();
       return processing.current = false;
     }
 
@@ -155,43 +156,12 @@ const PlayBoard = () => {
     const { direction: AIdirection, nextPos: AINextPos }: {
       direction: cellPos;
       nextPos: position;
-    } = (() => {
-      if (playerDirection === null) {
-        return { direction: null, nextPos: AIPos.current };
-      }
-
-      if (isOutOfBoard(playerPos)) {
-        const movableDirecition = Object.keys(deltaPosition).find(
-          (direction) => {
-            const delta =
-              deltaPosition[direction as keyof typeof deltaPosition];
-            const nextPos = {
-              x: AIPos.current.x + delta.x,
-              y: AIPos.current.y + delta.y,
-            };
-            if (boardRef.current[posToIndex(nextPos)].owner === null) {
-              return true;
-            }
-
-            return false;
-          },
-        ) as Exclude<cellPos, null>;
-
-        const delta =
-          deltaPosition[movableDirecition as keyof typeof deltaPosition];
-        const nextPos = {
-          x: AIPos.current.x + delta.x,
-          y: AIPos.current.y + delta.y,
-        };
-
-        return {
-          direction: movableDirecition ?? "up",
-          nextPos: nextPos,
-        };
-      }
-
-      return getNextAIPosition(AIPos.current, playerPos, board);
-    })();
+    } = await getNextAIPosition(
+      AIPos.current,
+      playerPos,
+      playerDirection,
+      board,
+    );
 
     setBoard((board) => {
       return board.map((cell, i) => {
