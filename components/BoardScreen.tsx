@@ -2,6 +2,8 @@
 /** @jsxFrag Fragment */
 import { Fragment, h } from "preact";
 import { tw } from "@twind";
+import { useEffect, useState } from "preact/hooks";
+import { winnerFile } from "../routes/api/winners.ts";
 
 export type state = "title" | "playing" | "win" | "lose";
 
@@ -10,6 +12,14 @@ export type screenProps = {
 };
 
 const BoardScreen = ({ state }: screenProps) => {
+  const [winner, setWinner] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("/api/winners").then((res) => res.json()).then((res: winnerFile) => {
+      setWinner(res.winner);
+    });
+  }, [setWinner]);
+
   if (state === "title") {
     return (
       <div
@@ -17,7 +27,10 @@ const BoardScreen = ({ state }: screenProps) => {
         style={{ backgroundColor: "rgb(0 0 0 / 50%)" }}
       >
         <img src="/logo.png" alt="TRON" width="300" class={tw`mt-32`} />
-        <p class={tw`mb-32 mt-auto text-[#eee]`}>WASDまたは矢印キーを押してスタート</p>
+        {winner !== null && (
+          <p class={tw`mt-auto mb-8 text-[#eee]`}>今までの勝者 ー {winner}人</p>
+        )}
+        <p class={tw`mb-32 text-[#eee]`}>WASDまたは矢印キーを押してスタート</p>
       </div>
     );
   }
