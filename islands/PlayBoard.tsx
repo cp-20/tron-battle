@@ -109,7 +109,7 @@ const PlayBoard = () => {
     usePlayer(
       initialPlayerPosition,
     );
-  const { getNextAIPosition } = useAI();
+  const { getNextAIPosition, clearCache } = useAI();
 
   const [screenState, setScreenState] = useState<state>("title");
   const screenStateRef = useRef<state>(screenState);
@@ -128,6 +128,7 @@ const PlayBoard = () => {
     processing.current = true;
 
     if (["win", "lose"].includes(screenStateRef.current)) {
+      clearCache();
       return processing.current = false;
     }
 

@@ -142,10 +142,7 @@ const useAI = () => {
     playerDirection: cellPos,
     board: cell[],
   ) => {
-    // キャッシュ作業を停止
-    if (cacheTimeout.current) {
-      clearTimeout(cacheTimeout.current);
-    }
+    console.log(AIPos, playerPos, playerDirection, board);
 
     // 次のAIの情報を取得
     const next = await _getNextAIPosition(
@@ -167,12 +164,7 @@ const useAI = () => {
     });
 
     // キャッシュを削除
-    nextDirection.current = {
-      up: null,
-      right: null,
-      down: null,
-      left: null,
-    };
+    clearCache();
 
     // 次のキャッシュを生成
     cacheNextAIPosition(next.nextPos, playerPos, nextBoard);
@@ -180,7 +172,21 @@ const useAI = () => {
     return next;
   };
 
-  return { getNextAIPosition };
+  const clearCache = () => {
+    // キャッシュ作業を停止
+    if (cacheTimeout.current) {
+      clearTimeout(cacheTimeout.current);
+    }
+
+    nextDirection.current = {
+      up: null,
+      right: null,
+      down: null,
+      left: null,
+    };
+  };
+
+  return { getNextAIPosition, clearCache };
 };
 
 export default useAI;
