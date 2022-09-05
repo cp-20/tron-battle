@@ -16,7 +16,7 @@ const getPreviousPos = (pos: position): position => ({
   y: Math.min(Math.max(pos.y, 0), boardSize.y - 1),
 });
 
-type winner = 'AI' | 'player' | 'draw' | null;
+type winner = 'AI' | 'player' | null;
 
 type winnerValue = {
   winner: winner;
@@ -52,7 +52,7 @@ const getWinner = (
 
   if (isPlayerWin && isAIWin) {
     return {
-      winner: 'draw',
+      winner: 'player',
       deathPos: [playerDeathPos, AIDeathPos],
     };
   }
@@ -71,7 +71,7 @@ const getWinner = (
 
   if (isSamePos(nextPlayerPos, nextAIPos)) {
     return {
-      winner: 'draw',
+      winner: 'AI',
       deathPos: [nextPlayerPos],
     };
   }

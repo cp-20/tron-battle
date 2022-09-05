@@ -3,7 +3,7 @@
 import { Fragment, h } from "preact";
 import { tw } from "@twind";
 
-export type state = "title" | "playing" | "win" | "lose" | "draw";
+export type state = "title" | "playing" | "win" | "lose";
 
 export type screenProps = {
   state: state;
@@ -26,7 +26,7 @@ const BoardScreen = ({ state }: screenProps) => {
     return <></>;
   }
 
-  if (["win", "lose", "draw"].includes(state)) {
+  if (["win", "lose"].includes(state)) {
     return (
       <div
         class={tw`w-full h-full flex flex-col items-center animate-fadein`}
@@ -47,14 +47,6 @@ const BoardScreen = ({ state }: screenProps) => {
               style={{ textShadow: "0 0 1rem rgba(220 38 38 / 50%)" }}
             >
               YOU LOSE
-            </span>
-          )}
-          {state === "draw" && (
-            <span
-              class={tw`text-8xl text-gray-200`}
-              style={{ textShadow: "0 0 1rem rgba(229 231 235 / 50%)" }}
-            >
-              DRAW
             </span>
           )}
         </p>
