@@ -250,10 +250,11 @@ const PlayBoard = () => {
 
     if (winner !== null) {
       if (winner === "player") {
+        fetch("/api/winners?type=winner", { method: "POST" });
         setScreenState("win");
-        fetch("/api/winners", { method: "POST" });
       }
       if (winner === "AI") {
+        fetch("/api/winners", { method: "POST" });
         setScreenState("lose");
       }
       setDiff(deathPos);

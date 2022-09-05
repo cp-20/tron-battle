@@ -12,13 +12,15 @@ export type screenProps = {
 };
 
 const BoardScreen = ({ state }: screenProps) => {
-  const [winner, setWinner] = useState<number | null>(null);
+  const [data, setData] = useState<winnerFile | null>(null);
 
   useEffect(() => {
     fetch("/api/winners").then((res) => res.json()).then((res: winnerFile) => {
-      setWinner(res.winner);
+      console.log(res);
+
+      setData(res);
     });
-  }, [setWinner, state]);
+  }, [setData, state]);
 
   if (state === "title") {
     return (
@@ -27,8 +29,12 @@ const BoardScreen = ({ state }: screenProps) => {
         style={{ backgroundColor: "rgb(0 0 0 / 50%)" }}
       >
         <img src="/logo.png" alt="TRON" width="300" class={tw`mt-32`} />
-        {winner !== null && (
-          <p class={tw`mt-auto mb-8 text-[#eee]`}>今までの勝者 ー {winner}人</p>
+        {data !== null && (
+          <p class={tw`mt-auto mb-8 text-[#eee]`}>
+            今までの勝者 ー <span class={tw`text-yellow-400`}>{data.winner}人</span> /
+            {" "}
+            {data.battle}人
+          </p>
         )}
         <p class={tw`mb-32 text-[#eee]`}>WASDまたは矢印キーを押してスタート</p>
       </div>
