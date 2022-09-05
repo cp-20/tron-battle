@@ -18,7 +18,7 @@ const BoardScreen = ({ state }: screenProps) => {
     fetch("/api/winners").then((res) => res.json()).then((res: winnerFile) => {
       setWinner(res.winner);
     });
-  }, [setWinner]);
+  }, [setWinner, state]);
 
   if (state === "title") {
     return (
