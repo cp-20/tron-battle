@@ -122,7 +122,7 @@ const PlayBoard = () => {
     if (processing.current) return;
     processing.current = true;
 
-    if (["win", "lose", "draw"].includes(screenStateRef.current)) {
+    if (["win", "lose"].includes(screenStateRef.current)) {
       return processing.current = false;
     }
 
@@ -251,9 +251,6 @@ const PlayBoard = () => {
       if (winner === "AI") {
         setScreenState("lose");
       }
-      if (winner === "draw") {
-        setScreenState("draw");
-      }
       setDiff(deathPos);
       return processing.current = false;
     }
@@ -273,7 +270,7 @@ const PlayBoard = () => {
   };
 
   const onKeydown = useCallback((e: KeyboardEvent) => {
-    if (e.key === " " && ["win", "lose", "draw"].includes(screenState)) {
+    if (e.key === " " && ["win", "lose"].includes(screenState)) {
       e.stopPropagation();
       const initialPlayerPosition = getRandomPos();
       const initialAIPosition = getRandomPos();
