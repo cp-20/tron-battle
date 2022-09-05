@@ -128,11 +128,6 @@ const PlayBoard = () => {
     processing.current = true;
 
     if (["win", "lose"].includes(screenStateRef.current)) {
-      if (screenStateRef.current === "win") {
-        fetch("/api/winners", { method: "POST" });
-      }
-
-      clearCache();
       return processing.current = false;
     }
 
@@ -223,8 +218,10 @@ const PlayBoard = () => {
     );
 
     if (winner !== null) {
+      clearCache();
       if (winner === "player") {
         setScreenState("win");
+        fetch("/api/winners", { method: "POST" });
       }
       if (winner === "AI") {
         setScreenState("lose");
