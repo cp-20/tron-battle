@@ -52,7 +52,7 @@ const getWinner = (
 
   if (isPlayerWin && isAIWin) {
     return {
-      winner: 'player',
+      winner: 'AI',
       deathPos: [playerDeathPos, AIDeathPos],
     };
   }
@@ -71,7 +71,7 @@ const getWinner = (
 
   if (isSamePos(nextPlayerPos, nextAIPos)) {
     return {
-      winner: 'AI',
+      winner: 'player',
       deathPos: [nextPlayerPos],
     };
   }
