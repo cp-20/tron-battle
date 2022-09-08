@@ -47,7 +47,7 @@ const useAI = () => {
 
     const bodyString = JSON.stringify(body);
 
-    const res = ai_response(bodyString, 6);
+    const res = ai_response(bodyString, 8);
 
     const text = res.toLowerCase().slice(1, -1);
 
