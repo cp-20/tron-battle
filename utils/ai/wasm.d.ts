@@ -1,25 +1,21 @@
 /* tslint:disable */
 /* eslint-disable */
 /**
-*/
-export function init(): void;
-/**
 * @param {string} req
+* @param {number} depth
 * @returns {string}
 */
-export function ai_response(req: string): string;
+export function ai_response(req: string, depth: number): string;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
-  readonly ai_response: (a: number, b: number, c: number) => void;
-  readonly init: () => void;
+  readonly ai_response: (a: number, b: number, c: number, d: number) => void;
   readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
   readonly __wbindgen_malloc: (a: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number) => number;
   readonly __wbindgen_free: (a: number, b: number) => void;
-  readonly __wbindgen_start: () => void;
 }
 
 /**
