@@ -4,10 +4,15 @@ import { Fragment, h } from "preact";
 import { tw } from "@twind";
 import PlayBoard from "../islands/PlayBoard.tsx";
 import Description from "../components/Description.tsx";
+import { Head } from "$fresh/runtime.ts";
 
 const Home = () => {
   return (
     <>
+      <Head>
+        <title>TRON BATTLE</title>
+      </Head>
+
       <h1 class={tw`hidden`}>TRON</h1>
 
       <div
